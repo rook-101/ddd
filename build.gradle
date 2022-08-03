@@ -2,6 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.7.2'
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+	id 'jacoco'
 }
 
 group = 'com.rook'
@@ -32,8 +34,90 @@ dependencies {
 	testImplementation 'org.springframework:spring-webflux'
 	testImplementation 'org.springframework.graphql:spring-graphql-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		xml.enabled false
+		csv.enabled false
+
+		html.destination file("jacoco/jacoco.html")
+	}
+
+	def excludePatterns = []
+	for (qPattern in '**/QA'..'**/QZ') {
+		excludePatterns.add(qPattern + '*')
+	}
+	afterEvaluate {
+		classDirectories.setFrom(
+				files(classDirectories.files.collect {
+					fileTree(dir: it, excludes: [] + excludePatterns)
+				})
+		)
+	}
+}
+
+jacocoTestCoverageVerification {
+	def excludePatterns = []
+	for (qPattern in '*.QA'..'*.QZ') {
+		excludePatterns.add(qPattern + '*')
+	}
+
+	violationRules {
+		rule {
+			element = "CLASS"
+			excludes = [] + excludePatterns
+
+
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.70
+			}
+		}
+	}
+}
+
+task testCoverage(type: Test) {
+	group 'verification'
+	description 'Runs the unit tests with coverage'
+
+	dependsOn(':test',
+			':jacocoTestReport',
+			':jacocoTestCoverageVerification')
+
+	tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+	tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
+
 }
