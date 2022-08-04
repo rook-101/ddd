@@ -1,5 +1,8 @@
 package com.rook.ddd.module.user.domain.usecase.command;
 
+import com.rook.ddd.module.user.domain.usecase.input.MemberLoginInput;
+import com.rook.ddd.module.user.domain.usecase.result.MemberLoginResult;
+
 public interface MemberLogin {
-    void execute();
+    MemberLoginResult execute(MemberLoginInput input);
 }

@@ -27,7 +27,7 @@ public class AuthController {
 
     @PostMapping("login")
     public ResponseEntity<MemberLoginResponse> login(@RequestBody MemberLoginRequest request) {
-        memberLogin.execute();
+        memberLogin.execute(request.toInput());
         MemberLoginResponse response = new MemberLoginResponse();
         return ResponseEntity.ok().body(response);
     }
