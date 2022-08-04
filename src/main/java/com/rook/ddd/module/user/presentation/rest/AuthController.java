@@ -3,6 +3,8 @@ package com.rook.ddd.module.user.presentation.rest;
 import com.rook.ddd.module.user.domain.usecase.command.MemberLogin;
 import com.rook.ddd.module.user.domain.usecase.command.MemberLogout;
 import com.rook.ddd.module.user.domain.usecase.command.MemberSignup;
+import com.rook.ddd.module.user.domain.usecase.result.MemberLoginResult;
+import com.rook.ddd.module.user.domain.usecase.result.MemberSignupResult;
 import com.rook.ddd.module.user.presentation.dto.MemberLoginRequest;
 import com.rook.ddd.module.user.presentation.dto.MemberLoginResponse;
 import com.rook.ddd.module.user.presentation.dto.MemberLogoutResponse;
@@ -30,16 +32,16 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<MemberLoginResponse> login(@RequestBody MemberLoginRequest request) {
         log.info("LoginRequest: " + request.toString());
-        memberLogin.execute(request.toInput());
-        MemberLoginResponse response = new MemberLoginResponse();
+        MemberLoginResult result = memberLogin.execute(request.toInput());
+        MemberLoginResponse response = MemberLoginResponse.from(result);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("signup")
     public ResponseEntity<MemberSignupResponse> signup(@RequestBody MemberSignupRequest request) {
         log.info("Signup Request : " + request.toString());
-        memberSignup.execute(request.toInput());
-        MemberSignupResponse response = new MemberSignupResponse();
+        MemberSignupResult result = memberSignup.execute(request.toInput());
+        MemberSignupResponse response = MemberSignupResponse.from(result);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
