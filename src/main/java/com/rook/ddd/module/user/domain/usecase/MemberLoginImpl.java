@@ -12,6 +12,7 @@ import com.rook.ddd.module.user.domain.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -22,6 +23,7 @@ public class MemberLoginImpl implements MemberLogin {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public MemberLoginResult execute(MemberLoginInput input) {
         Member member = memberRepository.findByUsername(input.getUsername());
         if (member == null) {
