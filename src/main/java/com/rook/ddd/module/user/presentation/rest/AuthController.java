@@ -29,6 +29,7 @@ public class AuthController {
 
     @PostMapping("login")
     public ResponseEntity<MemberLoginResponse> login(@RequestBody MemberLoginRequest request) {
+        log.info("LoginRequest: " + request.toString());
         memberLogin.execute(request.toInput());
         MemberLoginResponse response = new MemberLoginResponse();
         return ResponseEntity.status(HttpStatus.OK).body(response);
