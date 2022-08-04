@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JwtTokenManagerImpl implements JwtTokenManager {
 
-    private static final String SECRET_KEY = "wefaxzcvfefaefaefaefaeease";
+    private static final String SECRET_KEY = "wefaxzcvfefaefaefaefaeeaseefefefafefewsfawsefefefasefasefasefasefasefawsefaxzcbvfdshbtdjndfynsdtaesfawefawefqwerasdvadfaesfeaswfaefawsef";
     private static final int ACCESS_TOKEN_DURATION = 300;
     private static final int REFRESH_TOKEN_DURATION = 7200;
 
