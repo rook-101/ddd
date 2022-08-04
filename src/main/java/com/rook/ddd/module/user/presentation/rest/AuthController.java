@@ -40,7 +40,6 @@ public class AuthController {
         log.info("Signup Request : " + request.toString());
         memberSignup.execute(request.toInput());
         MemberSignupResponse response = new MemberSignupResponse();
-        log.info("this is here");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
