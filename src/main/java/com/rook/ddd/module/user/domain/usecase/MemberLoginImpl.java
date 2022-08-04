@@ -4,7 +4,7 @@ import com.rook.ddd.module.user.domain.entity.Member;
 import com.rook.ddd.module.user.domain.exception.MemberNotFoundException;
 import com.rook.ddd.module.user.domain.exception.WrongPasswordException;
 import com.rook.ddd.module.user.domain.repository.MemberRepository;
-import com.rook.ddd.module.user.domain.usecase.command.JwtTokenManager;
+import com.rook.ddd.module.user.domain.util.JwtTokenManager;
 import com.rook.ddd.module.user.domain.usecase.command.MemberLogin;
 import com.rook.ddd.module.user.domain.usecase.input.MemberLoginInput;
 import com.rook.ddd.module.user.domain.usecase.result.MemberLoginResult;
@@ -32,8 +32,8 @@ public class MemberLoginImpl implements MemberLogin {
         if (!passwordEncoder.matches(input.getPassword(), member.getEncodedPassword())) {
             throw new WrongPasswordException();
         }
-        String accessToken = jwtTokenManager.createAccessToken();
-        String refreshToken = jwtTokenManager.createRefreshToken();
+        String accessToken = jwtTokenManager.createAccessToken(member);
+        String refreshToken = jwtTokenManager.createRefreshToken(member);
         return MemberLoginResult.builder()
                                 .accessToken(accessToken)
                                 .refreshToken(refreshToken)
