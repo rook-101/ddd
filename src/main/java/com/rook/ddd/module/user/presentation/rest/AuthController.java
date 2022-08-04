@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("auth")
 public class AuthController {
-    private MemberLogin memberLogin;
-    private MemberLogout memberLogout;
-    private MemberSignup memberSignup;
+    private final MemberLogin memberLogin;
+    private final MemberLogout memberLogout;
+    private final MemberSignup memberSignup;
 
     @PostMapping("login")
     public ResponseEntity<MemberLoginResponse> login(@RequestBody MemberLoginRequest request) {
@@ -36,8 +36,10 @@ public class AuthController {
 
     @PostMapping("signup")
     public ResponseEntity<MemberSignupResponse> signup(@RequestBody MemberSignupRequest request) {
+        log.info("Signup Request : " + request.toString());
         memberSignup.execute(request.toInput());
         MemberSignupResponse response = new MemberSignupResponse();
+        log.info("this is here");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
